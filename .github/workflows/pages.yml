@@ -1,0 +1,51 @@
+name: Publish design helper
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  publish:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Find site directory
+        id: site
+        shell: bash
+        run: |
+          if [ -f zt-design-helper/index.html ]; then
+            echo "path=zt-design-helper" >> "$GITHUB_OUTPUT"
+          else
+            echo "path=." >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify
+        working-directory: ${{ steps.site.outputs.path }}
+        run: |
+          node --test tests/*.test.cjs
+          python3 tests/check_assets.py
+      - name: Prepare public files
+        env:
+          SITE_DIR: ${{ steps.site.outputs.path }}
+        run: |
+          mkdir _site
+          cp "$SITE_DIR"/index.html "$SITE_DIR"/styles.css "$SITE_DIR"/app.js "$SITE_DIR"/core.js "$SITE_DIR"/reference-data.js "$SITE_DIR"/favicon.svg _site/
+          cp -R "$SITE_DIR"/assets "$SITE_DIR"/palettes _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

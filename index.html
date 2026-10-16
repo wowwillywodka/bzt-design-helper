@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#141715">
+  <title>ZT / BZT — Design Helper</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="reference-data.js" defer></script>
+  <script src="core.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="header"><h1><span>ZT / BZT</span> Design Helper</h1><span id="version" class="version">JULY 1995</span></header>
+  <div class="topbar">
+    <div role="tablist" aria-label="Режим страницы" class="tabs">
+      <button type="button" role="tab" id="tab-stretch" aria-selected="true" aria-controls="stretch">Растягиватель</button>
+      <button type="button" role="tab" id="tab-samples" aria-selected="false" aria-controls="samples" tabindex="-1">Образцы</button>
+    </div>
+    <div class="game-controls"><label class="episode-label">Игра <select id="game" aria-label="Игра"><option value="bzt">BZT July</option><option value="zt">ZT Rev A</option></select></label>
+    <label class="episode-label" id="episode-label">Эпизод <select id="episode" aria-label="Эпизод BZT"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label></div>
+  </div>
+  <section id="stretch" role="tabpanel" aria-labelledby="tab-stretch">
+    <div class="toolbar">
+      <label class="upload" id="dropzone" title="Выбери PNG или перетащи его на страницу">Загрузить PNG<input id="upload" type="file" accept="image/png,.png"></label>
+      <span id="file-name" class="file-name">Дробовик · образец</span>
+      <label>Тип <select id="category"><option value="world">Пикап</option><option value="decor">Окружение</option><option value="effects">Эффекты</option><option value="other">Без установленного применения</option><option value="icons">Иконка</option><option value="held">Оружие в руках</option></select></label>
+      <input type="hidden" id="shape" value="small">
+      <select id="ratio" aria-label="Соотношение сторон" aria-describedby="ratio-description">
+        <option value="1:2">1:2</option><option value="1:1">1:1</option><option value="5:4">5:4</option><option value="2:1" selected>2:1</option><option value="8:3">8:3</option><option value="4:1">4:1</option><option value="8:1">8:1</option>
+      </select>
+      <label id="mirror-label" class="mirror-label"><input type="checkbox" id="mirror"> Отразить</label>
+    </div>
+    <p id="ratio-description" class="ratio-description">Соотношение — ширина : высота. 1:1 — квадрат, 2:1 — вдвое шире, 1:2 — вдвое выше.</p>
+    <div id="height-control" class="height-control" hidden>
+      <label for="height-offset">Сжатие по вертикали</label><span>Тоньше</span><input type="range" id="height-offset" min="-32" max="32" value="0"><span>Выше</span><output id="height-ratio" for="height-offset">8:1</output>
+    </div>
+    <div id="phase-control" class="height-control" hidden><label for="effect-phase">Фаза эффекта</label><input type="range" id="effect-phase" min="0" max="255" value="0"><output id="phase-value" for="effect-phase">0</output></div>
+    <div class="comparison">
+      <figure><figcaption>Исходник <span id="source-size">32 × 32</span></figcaption><div class="stage" id="source-stage"><canvas id="source" width="32" height="32" aria-label="Исходный PNG"></canvas></div></figure>
+      <figure><figcaption><span id="result-title">Игровые пропорции</span> <span id="result-size">64 × 32 · 2:1</span></figcaption><div class="stage" id="result-stage"><canvas id="result" width="64" height="32" aria-label="Крупный предпросмотр игровых пропорций"></canvas></div></figure>
+    </div>
+    <div class="tool-footer"><p id="hint">Исходник сдавай 32×32.</p><div class="preview-downloads"><button type="button" id="download-original" class="download">Обычный PNG ↓</button><button type="button" id="download" class="download">Как в игре ↓</button></div></div>
+    <p id="status" class="status" aria-live="polite">Загружаем образец…</p>
+  </section>
+  <section id="samples" role="tabpanel" aria-labelledby="tab-samples" hidden>
+    <div class="samples-toolbar"><p>Нажми на образец для просмотра или скачай PNG.</p><input id="sample-search" type="search" placeholder="Название или № тайла" aria-label="Поиск образцов"><select id="sample-category" aria-label="Категория образцов"><option value="all">Все</option><option value="world">Пикапы</option><option value="decor">Окружение</option><option value="effects">Эффекты</option><option value="other">Без установленного применения</option><option value="icons">Иконки</option><option value="held">Оружие в руках</option></select></div>
+    <p id="sample-count" class="note" aria-live="polite"></p>
+    <a id="download-pack" class="download-pack" href="assets/bzt-july-resources.zip" download>Скачать набор BZT July · ZIP ↓</a>
+    <div id="sample-grid" class="sample-grid"></div>
+  </section>
+  <section id="palettes" class="palettes">
+    <h2>Палитры</h2>
+    <div id="palette-cards" class="palette-cards"></div>
+    <p class="note">00 — прозрачность, F — непрозрачный чёрный. У объектов мира прозрачность задаётся парами пикселей по горизонтали. Без сглаживания и полупрозрачности.</p>
+  </section>
+  <footer><span id="game-credit">Beyond Zero Tolerance · July prototype</span><span>PNG обрабатывается в браузере</span></footer>
+</main>
+<div id="drop-overlay" class="drop-overlay" aria-hidden="true" hidden>Отпусти PNG для загрузки</div>
+<div id="toast" role="status" hidden></div>
+<noscript>Включи JavaScript для предпросмотра. <a href="palettes/palettes.json">Скачать палитры JSON</a>.</noscript>
+</body>
+</html>

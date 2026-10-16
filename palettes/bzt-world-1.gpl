@@ -1,0 +1,20 @@
+GIMP Palette
+Name: BZT July - world-1
+Columns: 8
+# Slot 00: transparency; world uses packed-byte pairs.
+  0   0   0	00
+218 109 218	01
+182  72 145	02
+109  36 182	03
+ 72 109  72	04
+182 218 109	05
+218 255 109	06
+255 218  72	07
+218  36   0	08
+145  36   0	09
+ 72  36   0	0A
+145  72  36	0B
+255 218 182	0C
+  0 255 255	0D
+255 255 255	0E
+  0   0   0	0F
